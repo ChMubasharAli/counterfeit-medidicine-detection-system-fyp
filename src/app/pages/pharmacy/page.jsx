@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
+import Image from "next/image";
 import ManufacturerNavbar from "./ManufacturerNavbar";
 
 
@@ -70,7 +70,7 @@ export default function Manufacturer() {
                             <td className=" border px-2 py-1">{item.expiryDate}</td>
                             <td className=" border px-2 py-1">{item.distributedQuantity}</td>
                             <td className=" flex items-center justify-center border px-2 py-3">
-                                <img src={item.qrImage} alt="QR Code" className="w-24 h-24" />
+                                <Image src={item.qrImage} width={125} height={125} alt="QR Code" />
                             </td>
                         </tr>
                     ))}
