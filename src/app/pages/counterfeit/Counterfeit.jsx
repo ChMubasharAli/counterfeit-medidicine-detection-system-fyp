@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 const QRCodeScanner = () => {
     const [data, setData] = useState('No result');
     const [isCameraActive, setIsCameraActive] = useState(false);
+    const [facingMode, setFacingMode] = useState('environment'); // Default to rear camera
     const [manufacturerRecord, setManufacturerRecord] = useState(null);
     const [distributorRecord, setDistributorRecord] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -35,6 +36,10 @@ const QRCodeScanner = () => {
 
     const toggleCamera = () => {
         setIsCameraActive(!isCameraActive);
+    };
+
+    const switchCamera = () => {
+        setFacingMode((prevFacingMode) => (prevFacingMode === 'environment' ? 'user' : 'environment'));
     };
 
     const extractSerialNumber = (data) => {
@@ -112,7 +117,7 @@ const QRCodeScanner = () => {
                             onError={handleError}
                             onScan={handleScan}
                             className="rounded-lg"
-                            facingMode="environment" // Use rear camera
+                            facingMode={facingMode} // Dynamic facing mode
                         />
                     ) : (
                         <div className="h-60 w-80 bg-gray-200 flex items-center justify-center rounded-lg">
@@ -120,12 +125,22 @@ const QRCodeScanner = () => {
                         </div>
                     )}
                 </div>
-                <button
-                    onClick={toggleCamera}
-                    className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
-                >
-                    {isCameraActive ? 'Stop Scanning' : 'Start Scanning'}
-                </button>
+                <div className="flex mt-4">
+                    <button
+                        onClick={toggleCamera}
+                        className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
+                    >
+                        {isCameraActive ? 'Stop Scanning' : 'Start Scanning'}
+                    </button>
+                    {isCameraActive && (
+                        <button
+                            onClick={switchCamera}
+                            className="ml-2 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-700 focus:outline-none"
+                        >
+                            Switch Camera
+                        </button>
+                    )}
+                </div>
             </div>
 
             {loading && <div className="text-center mt-4">Loading...</div>}
