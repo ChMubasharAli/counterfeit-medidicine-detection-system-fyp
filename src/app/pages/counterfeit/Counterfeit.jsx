@@ -1,5 +1,5 @@
-"use client"
-import React, { useEffect, useState } from 'react';
+"use client";
+import React, { useState } from 'react';
 import QrScanner from 'react-qr-scanner';
 import axios from 'axios';
 import Image from 'next/image';
@@ -84,7 +84,6 @@ const QRCodeScanner = () => {
             if (response.data) {
                 setDistributorRecord(response.data);
                 setLoading(false);
-                console.log("Above line of Authentic", response.data)
                 authentic();
             } else {
                 setLoading(false);
@@ -103,8 +102,6 @@ const QRCodeScanner = () => {
 
     return (
         <>
-            {/* {JSON.stringify(distributorRecord)} */}
-            {/* {JSON.stringify(manufacturerRecord)} */}
             <div className="flex flex-col items-center bg-gray-100 p-10">
                 <h1 className="text-2xl font-bold mb-4">Scan your QR Code</h1>
                 <div className="w-fit max-w-md bg-white shadow-lg rounded-lg p-4">
@@ -115,6 +112,7 @@ const QRCodeScanner = () => {
                             onError={handleError}
                             onScan={handleScan}
                             className="rounded-lg"
+                            facingMode="environment" // Use rear camera
                         />
                     ) : (
                         <div className="h-60 w-80 bg-gray-200 flex items-center justify-center rounded-lg">
