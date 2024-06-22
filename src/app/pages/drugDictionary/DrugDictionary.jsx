@@ -6,7 +6,7 @@ import Image from 'next/image';
 import debounce from 'lodash.debounce';
 
 const SearchComponent = () => {
-    const [medicines, setMedicines] = useState([]);
+    const [medicines, setMedicines] = useState([""]);
     const [searchTerm, setSearchTerm] = useState('');
 
     const fetchMedicines = async (query = '') => {

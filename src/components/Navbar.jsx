@@ -1,8 +1,7 @@
 
 "use client";
 import Link from "next/link";
-
-import { Button, Navbar } from "flowbite-react";
+import { Button, Navbar, } from "flowbite-react";
 import Image from "next/image";
 
 export default function NavbarComponent() {

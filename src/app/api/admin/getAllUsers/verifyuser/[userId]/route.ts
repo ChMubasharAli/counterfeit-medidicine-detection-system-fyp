@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "../../../../../../helper/connectDB";
 import User from "../../../../../../models/userModel";
+import sendVerificationEmail from '../../../../../../helper/sendVerificationEmail'
 
 connectDB();
 
@@ -24,7 +25,11 @@ export async function GET(request: NextRequest, context: any) {
         }
 
         user.isVerified = true;
+
+        // send Verification email 
+        sendVerificationEmail({ email: user.email, name: user.name })
         await user.save();
+
         return NextResponse.json({
             message: "User verified successfully ",
             userId: params.userId,

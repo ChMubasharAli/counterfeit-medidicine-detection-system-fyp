@@ -1,31 +1,30 @@
 import mongoose from "mongoose";
 
+const config = {
+    isConnected: false,
+};
 
+export async function connectDB() {
 
-const connection = {}
-
-async function connectDB() {
-
-    // check the database alredy connected or not 
-    if (connection.isConnected) {
-        console.log("Already connected to database");
+    if (config.isConnected) {
+        console.log("MongoDB already connected");
         return;
     }
 
     try {
-        const db = await mongoose.connect(process.env.MONGO_URL, {
+        const { connection } = await mongoose.connect(process.env.MONGO_URL, {
             dbName: "counterfeit"
         });
+        console.log("MongoDB connected successfully");
+        config.isConnected = connection.readyState === 1;
 
-        connection.isConnected = db.connections[0].readyState
-
-        // NOTE: must console.log "db" and "db.connections" you will understand the flow 
-
-        console.log("Database connected successfully")
     } catch (error) {
-        console.log("Database connection error :: ", error);
-        process.exit(1);
+        console.log('Something goes wrong!');
+        console.log(error);
+        process.exit();
+
     }
+
 }
 
 export default connectDB;

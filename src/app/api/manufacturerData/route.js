@@ -1,8 +1,9 @@
-import manufacturer from "../../pages/manufacturer/page";
 import { connectDB } from "../../../helper/connectDB";
+import User from '../../../models/userModel'
 import Manufacturer from "../../../models/manufacturerModel";
 import OnlyManufacturer from "../../../models/onlyManufacturerModel";
 import { NextResponse } from "next/server";
+import { sendEmailToDistributor } from "../../../helper/sendEmailToDistributor";
 
 
 
@@ -32,6 +33,7 @@ export async function POST(request) {
 
         //check if user already exists
 
+
         const newItem = new Manufacturer({
             medicineName,
             serialNumber,
@@ -45,7 +47,8 @@ export async function POST(request) {
             manufacturername
         })
 
-
+        // find the distributor details 
+        const distributor = await User.findOne({ email: distributerEmail })
 
         const item = new OnlyManufacturer({
             medicineName,
@@ -62,6 +65,9 @@ export async function POST(request) {
 
         await item.save();
         await newItem.save()
+
+        // send Email to distributor 
+        await sendEmailToDistributor({ email: distributerEmail, manufacturer: manufacturername, distributor: distributor.name });
         // console.log(savedItem);
 
 

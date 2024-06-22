@@ -9,19 +9,8 @@ import ShowData from "./ShowData";
 
 export default function Manufacturer() {
     const [data, setData] = useState(null);
-    const router = useRouter();
 
-    const logout = async () => {
-        try {
-            const response = await axios.get('/api/logout');
-            toast.success(response.data.message, { position: "top-right" });
-            router.push('/pages/login');
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || "An error occurred";
-            console.error(errorMessage);
-            toast.error(errorMessage, { position: "top-right" });
-        }
-    };
+
 
     // Function to fetch user details from the database
     const getUserDetails = async () => {

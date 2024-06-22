@@ -6,12 +6,17 @@ import Image from 'next/image';
 import Swal from 'sweetalert2';
 
 const QRCodeScanner = () => {
+    const [serialValue, setSerialValue] = useState('');
     const [data, setData] = useState('No result');
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [facingMode, setFacingMode] = useState('environment'); // Default to rear camera
     const [manufacturerRecord, setManufacturerRecord] = useState(null);
     const [distributorRecord, setDistributorRecord] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const handleSearch = async () => {
+        await getManufacturerDetail(serialValue);
+    };
 
     const handleScan = (result) => {
         if (result) {
@@ -60,7 +65,7 @@ const QRCodeScanner = () => {
     const counterfeit = () => {
         Swal.fire({
             title: 'Your Medicine is Counterfeit',
-            text: 'No supply chain available ',
+            text: 'No supply chain available',
             icon: 'error',
             confirmButtonText: 'Close'
         });
@@ -72,7 +77,7 @@ const QRCodeScanner = () => {
             const response = await axios.post('/api/authentication/getManufacturerRecord', { serialNumber });
             if (response.data) {
                 setManufacturerRecord(response.data);
-                getDistributorDetail(response.data.distributerEmail);
+                getDistributorDetail(response.data.distributerEmail, response.data.serialNumber);
             } else {
                 setLoading(false);
                 counterfeit();
@@ -83,9 +88,9 @@ const QRCodeScanner = () => {
         }
     };
 
-    const getDistributorDetail = async (distributorEmail) => {
+    const getDistributorDetail = async (distributorEmail, serialNumber) => {
         try {
-            const response = await axios.post('/api/authentication/getDistributorRecod', { distributorEmail });
+            const response = await axios.post('/api/authentication/getDistributorRecod', { distributorEmail, serialNumber });
             if (response.data) {
                 setDistributorRecord(response.data);
                 setLoading(false);
@@ -107,7 +112,22 @@ const QRCodeScanner = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center bg-gray-100 p-10">
+            <div className="flex flex-col items-center bg-gray-100 p-6">
+                <div className="flex items-center justify-center mb-6">
+                    <input
+                        type="text"
+                        className="border border-gray-300 rounded-l-lg p-2 w-[50vw] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter serial number..."
+                        value={serialValue}
+                        onChange={(e) => setSerialValue(e.target.value)}
+                    />
+                    <button
+                        onClick={handleSearch}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Search
+                    </button>
+                </div>
                 <h1 className="text-2xl font-bold mb-4">Scan your QR Code</h1>
                 <div className="w-fit max-w-md bg-white shadow-lg rounded-lg p-4">
                     {isCameraActive ? (

@@ -1,6 +1,7 @@
 import { connectDB } from "../../../helper/connectDB";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import User from "../../../models/userModel"
+import { sendEmailToPharmacy } from "../../../helper/sendEmailToPharmacy";
 import Distributor from "../../../models/distributorModel";
 
 
@@ -18,11 +19,16 @@ export async function POST(request) {
         console.log("Req body of Distributed Data", reqBody);
 
 
+        // finding the pharmacy and distributor details from the database 
+        const pharmacy = await User.findOne({ email: pharmacyEmail });
+        const distributor = await User.findOne({ email: distributerEmail });
+
         const newItem = new Distributor({
             distributedQuantity, distributerEmail, serialNumber, dosageForm, pharmacyEmail, medicineName, qrImage, expiryDate, manufactureDate,
         })
 
         await newItem.save()
+        sendEmailToPharmacy({ email: pharmacy.email, distributor: distributor.name, pharmacy: pharmacy.name });
 
 
         return NextResponse.json({

@@ -36,19 +36,19 @@ export default function LoginPage() {
             switch (role) {
                 case 'user':
                     if (isAdmin) {
-                        router.push('/pages/admin');
+                        router.push(`/pages/admin`);
                     } else {
-                        router.push('/pages/profile');
+                        router.push(`/pages/profile`);
                     }
                     break;
                 case 'manufacturer':
-                    router.push('/pages/manufacturer');
+                    router.push(`/pages/manufacturer`);
                     break;
                 case 'distributor':
-                    router.push('/pages/distributor');
+                    router.push(`/pages/distributer`);
                     break;
                 case 'pharmacy':
-                    router.push('/pages/pharmacy');
+                    router.push(`/pages/pharmacy`);
                     break;
                 default:
                     toast.error('Invalid role', { position: 'top-right' });
